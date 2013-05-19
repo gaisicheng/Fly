@@ -10,12 +10,12 @@ public abstract class AbstractServer implements Updateable {
         this.app = app;
     }
 
-    public void send(ClientCommand c) {
+    public synchronized void send(ClientCommand c) {
         buffer.add(c);
     }
 
     @Override
-    public void update(float delta) {
+    public synchronized void update(float delta) {
         for (ClientCommand c : buffer) {
             process(c);
         }

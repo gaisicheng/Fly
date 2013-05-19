@@ -5,6 +5,9 @@ import com.badlogic.gdx.InputAdapter;
 
 public class Input extends InputAdapter {
 
+    public static final int MOUSE_MOVE_X = 256;
+    public static final int MOUSE_MOVE_Y = 257;
+
     private final AbstractServer server;
 
     public Input(AbstractServer server) {
@@ -42,6 +45,13 @@ public class Input extends InputAdapter {
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        server.send(new ClientCommand((short) MOUSE_MOVE_X, System.currentTimeMillis(), screenX));
+        server.send(new ClientCommand((short) MOUSE_MOVE_Y, System.currentTimeMillis(), screenY));
         return false;
     }
 

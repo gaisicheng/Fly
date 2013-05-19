@@ -3,6 +3,7 @@ package com.xkings.fly;
 import java.util.List;
 
 import com.artemis.World;
+import com.badlogic.gdx.Input.Keys;
 import com.xkings.fly.GameStateManager.GameStatus;
 
 public class OfflineServer extends AbstractServer {
@@ -14,7 +15,8 @@ public class OfflineServer extends AbstractServer {
         super(app);
         this.world = app.getWorld();
         this.gsm = gsm;
-        //  world.setSystem(new MovementSystem());
+        //world.setSystem(new FlySystem());
+
     }
 
     @Override
@@ -44,6 +46,15 @@ public class OfflineServer extends AbstractServer {
     }
 
     private void processInput(ClientCommand c) {
+        if (c.getAction() == Keys.W) {
+            if (c.getValue() == 1) {
+                App.toggleCamera();
+            }
+        } else if (c.getAction() == Input.MOUSE_MOVE_X) {
+            App.getFlyer().getOffset().setOffsetFromMouseX(c.getValue());
+        } else if (c.getAction() == Input.MOUSE_MOVE_Y) {
+            App.getFlyer().getOffset().setOffsetFromMouseY(c.getValue());
+        }
 
     }
 
