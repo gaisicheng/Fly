@@ -2,8 +2,9 @@ precision mediump float;       // Set the default precision to medium. We don't 
                                // precision in the fragment shader.
 uniform vec3 u_lightPos;       // The position of the light in eye space.
 uniform vec4 u_tint;           // The overlaying color.
+uniform vec4 diffuseColor;           // The overlaying color.
 
-varying vec4 v_position;       // Interpolated position for this fragment.
+varying vec3 v_position;       // Interpolated position for this fragment.
                                // triangle per fragment.
 varying vec3 v_normal;         // Interpolated normal for this fragment.
 
@@ -16,8 +17,15 @@ void main()
     // Get a lighting direction vector from the light to the vertex.
     vec3 lightVector = normalize(u_lightPos - v_position.xyz);
 
-    float diffuse = (7 - distance) / 10.0f;
+    // Calculate the dot product of the light vector and vertex normal. If the normal and light vector are
+      // pointing in the same direction then it will get max illumination.
+      float diffuse = dot(v_normal, lightVector);
 
-    gl_FragColor = u_tint * diffuse ;
+      // Add attenuation.
+
+
+      if(diffuse > 0.5){
+    gl_FragColor = diffuseColor * diffuse ;
+      }
 
 }

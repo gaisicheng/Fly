@@ -6,20 +6,20 @@ import com.artemis.Entity;
 import com.artemis.annotations.Mapper;
 import com.artemis.systems.EntityProcessingSystem;
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.graphics.Mesh;
+import com.badlogic.gdx.graphics.g3d.materials.Material;
+import com.badlogic.gdx.graphics.g3d.model.SubMesh;
+import com.badlogic.gdx.graphics.g3d.model.still.StillModel;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector3;
 import com.xkings.fly.App;
-import com.xkings.fly.component.MeshComponent;
+import com.xkings.fly.component.ModelComponent;
 import com.xkings.fly.component.Position;
 import com.xkings.fly.component.Rotation;
 import com.xkings.fly.component.ShaderComponent;
 
 public class RenderGeometrySystem extends EntityProcessingSystem {
     @Mapper
-    ComponentMapper<MeshComponent> meshMapper;
+    ComponentMapper<ModelComponent> modelMapper;
     @Mapper
     ComponentMapper<ShaderComponent> shaderMapper;
     @Mapper
@@ -30,16 +30,14 @@ public class RenderGeometrySystem extends EntityProcessingSystem {
     private final Camera light;
 
     public RenderGeometrySystem(Camera light) {
-        super(Aspect.getAspectForAll(MeshComponent.class, ShaderComponent.class));
+        super(Aspect.getAspectForAll(ModelComponent.class, ShaderComponent.class));
         this.light = light;
     }
 
     @Override
     protected void process(Entity e) {
 
-        Mesh mesh = meshMapper.get(e).getMesh();
         ShaderProgram shader = shaderMapper.get(e).getShader();
-        Color shaderColor = shaderMapper.get(e).getColor();
 
         Camera camera = App.getCamera();
 
@@ -54,18 +52,25 @@ public class RenderGeometrySystem extends EntityProcessingSystem {
         }
 
         adjustCameraPosition(camera, position, -1f);
-        adjustCameraRotation(camera, rotation, -1f);
+        //  adjustCameraRotation(camera, rotation, -1f);
         camera.update();
 
         shader.begin();
         shader.setUniformMatrix("u_MVPMatrix", camera.combined);
         shader.setUniformMatrix("u_MVMatrix", camera.view);
-        shader.setUniformf("u_tint", shaderColor);
         shader.setUniformf("u_lightPos", App.getFlyer().getPosition().getPoint());
-        mesh.render(shader, GL10.GL_TRIANGLES);
+
+        StillModel model = modelMapper.get(e).getModel();
+        for (SubMesh submesh : model.getSubMeshes()) {
+            Material material = submesh.material;
+            for (int i = 0; i < material.getNumberOfAttributes(); i++) {
+                material.getAttribute(i).bind(shader);
+            }
+            submesh.getMesh().render(shader, submesh.primitiveType);
+        }
         shader.end();
 
-        adjustCameraRotation(camera, rotation, 1f);
+        //  adjustCameraRotation(camera, rotation, 1f);
         adjustCameraPosition(camera, position, 1f);
         //   camera.update();
     }

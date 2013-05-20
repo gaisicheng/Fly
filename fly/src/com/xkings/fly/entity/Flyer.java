@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.xkings.fly.Assets;
 import com.xkings.fly.component.FollowCamera;
-import com.xkings.fly.component.MeshComponent;
+import com.xkings.fly.component.ModelComponent;
 import com.xkings.fly.component.Move;
 import com.xkings.fly.component.OffsetPosition;
 import com.xkings.fly.component.PathPosition;
@@ -25,7 +25,7 @@ public class Flyer extends ConcreteEntity {
     private final Size size;
     private final Move move;
     private final Speed speed;
-    private final MeshComponent mesh;
+    private final ModelComponent mesh;
     private final ShaderComponent shader;
     private final FollowCamera followCamera;
 
@@ -39,10 +39,10 @@ public class Flyer extends ConcreteEntity {
         size = new Size(1, 1, 1);
         move = new Move(1, 0, 0);
         move.getPoint().y = 0;
-        speed = new Speed(0.005f);
-        mesh = new MeshComponent(Assets.getFlyer());
+        speed = new Speed(0.003f);
+        mesh = new ModelComponent(Assets.getFlyer());
         shader = new ShaderComponent(Shader.getShader("normal"), new Color(0, 0, 1, 1));
-        followCamera = new FollowCamera(camera, 1f);
+        followCamera = new FollowCamera(camera, 3f);
 
         bag.add(position);
         bag.add(pathPosition);
@@ -78,7 +78,7 @@ public class Flyer extends ConcreteEntity {
         return speed;
     }
 
-    public MeshComponent getMesh() {
+    public ModelComponent getMesh() {
         return mesh;
     }
 

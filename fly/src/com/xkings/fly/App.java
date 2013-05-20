@@ -83,14 +83,20 @@ public class App implements ApplicationListener {
     public void dispose() {
     }
 
+    float ang = 0f;
+
     @Override
     public void render() {
         Gdx.gl.glClearColor(0, 0.2f, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT
                 | (Gdx.graphics.getBufferFormat().coverageSampling ? GL20.GL_COVERAGE_BUFFER_BIT_NV : 0));
 
-        cornerCamera.position.set(-WORLD_SIZE, WORLD_SIZE, 0);
-        cornerCamera.direction.set(1, -1, 0);
+        ang += 0.01f;
+        float x = (float) (Math.cos(ang) * 5);
+        float y = (float) (Math.sin(ang) * 5);
+
+        cornerCamera.position.set(x, 5, y);
+        cornerCamera.lookAt(0, 0, 0);
         cornerCamera.update();
 
         flyMovement.process();
@@ -136,9 +142,6 @@ public class App implements ApplicationListener {
 
         cornerCamera.viewportWidth = width;
         cornerCamera.viewportHeight = height;
-        cornerCamera.position.set(-2, 2, -2);
-        cornerCamera.lookAt(0, 0, 0);
-        cornerCamera.update();
     }
 
     @Override
