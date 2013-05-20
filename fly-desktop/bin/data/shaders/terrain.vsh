@@ -1,12 +1,13 @@
+#ifdef GL_ES
+  precision mediump float;
+#endif
 uniform mat4 u_MVPMatrix;      // A constant representing the combined model/view/projection matrix.
 uniform mat4 u_MVMatrix;       // A constant representing the combined model/view matrix.
 
 attribute vec4 a_position;     // Per-vertex position information we will pass in.
-attribute vec4 a_color;        // Per-vertex color information we will pass in.
 attribute vec3 a_normal;       // Per-vertex normal information we will pass in.
 
 varying vec4 v_position;       // This will be passed into the fragment shader.
-varying vec4 v_color;          // This will be passed into the fragment shader.
 varying vec3 v_normal;         // This will be passed into the fragment shader.
 
 // The entry point for our vertex shader.
@@ -14,9 +15,6 @@ void main()
 {
     // Transform the vertex into eye space.
     v_position =  a_position;
-
-    // Pass through the color.
-    v_color = a_color;
 
     // Transform the normal's orientation into eye space.
     v_normal = vec3(u_MVMatrix * vec4(a_normal, 0.0));

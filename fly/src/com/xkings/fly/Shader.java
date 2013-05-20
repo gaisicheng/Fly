@@ -11,8 +11,7 @@ public class Shader {
     private static Shader instance;
 
     private enum ShaderType {
-        vsh,
-        fsh;
+        vsh, fsh;
     }
 
     private static class ShaderStructure {
@@ -40,11 +39,7 @@ public class Shader {
                 System.out.println("Compiling shader [" + name + "]");
                 program = new ShaderProgram(vertex, fragment);
                 if (!program.isCompiled()) {
-                    try {
-                        throw new ShaderException(name, program);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    throw new ShaderException(name, program);
                 }
             }
         }

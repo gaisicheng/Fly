@@ -4,7 +4,6 @@ uniform vec3 u_lightPos;       // The position of the light in eye space.
 uniform vec4 u_tint;           // The overlaying color.
 
 varying vec4 v_position;       // Interpolated position for this fragment.
-varying vec4 v_color;          // This is the color from the vertex shader interpolated across the
                                // triangle per fragment.
 varying vec3 v_normal;         // Interpolated normal for this fragment.
 
@@ -12,10 +11,10 @@ varying vec3 v_normal;         // Interpolated normal for this fragment.
 void main()
 {
     // Will be used for attenuation.
-    float distance = length(u_lightPos - v_position);
+    float distance = length(u_lightPos - v_position.xyz);
 
     // Get a lighting direction vector from the light to the vertex.
-    vec3 lightVector = normalize(u_lightPos - v_position);
+    vec3 lightVector = normalize(u_lightPos - v_position.xyz);
 
     float diffuse = (7 - distance) / 10.0f;
 
