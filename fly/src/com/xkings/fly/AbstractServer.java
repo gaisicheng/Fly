@@ -2,6 +2,9 @@ package com.xkings.fly;
 
 import java.util.ArrayList;
 
+import com.xkings.fly.logic.Updateable;
+import com.xkings.fly.server.ClientCommand;
+
 public abstract class AbstractServer implements Updateable {
     protected App app;
     private final ArrayList<ClientCommand> buffer = new ArrayList<ClientCommand>();

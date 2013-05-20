@@ -2,6 +2,7 @@ package com.xkings.fly;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
+import com.xkings.fly.server.ClientCommand;
 
 public class Input extends InputAdapter {
 

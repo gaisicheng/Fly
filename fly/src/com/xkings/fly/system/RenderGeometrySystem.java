@@ -1,4 +1,4 @@
-package com.xkings.fly.systems;
+package com.xkings.fly.system;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;

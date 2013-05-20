@@ -1,4 +1,4 @@
-package com.xkings.fly;
+package com.xkings.fly.graphics;
 
 import java.util.HashMap;
 

@@ -1,8 +1,10 @@
-package com.xkings.fly;
+package com.xkings.fly.entity;
 
 import com.artemis.World;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
+import com.xkings.fly.Assets;
+import com.xkings.fly.component.FollowCamera;
 import com.xkings.fly.component.MeshComponent;
 import com.xkings.fly.component.Move;
 import com.xkings.fly.component.OffsetPosition;
@@ -12,6 +14,7 @@ import com.xkings.fly.component.Rotation;
 import com.xkings.fly.component.ShaderComponent;
 import com.xkings.fly.component.Size;
 import com.xkings.fly.component.Speed;
+import com.xkings.fly.graphics.Shader;
 
 public class Flyer extends ConcreteEntity {
 

@@ -1,4 +1,4 @@
-package com.xkings.fly;
+package com.xkings.fly.server;
 
 public class ServerCommand {
 

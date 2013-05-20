@@ -1,4 +1,4 @@
-package com.xkings.fly;
+package com.xkings.fly.server;
 
 import java.io.Serializable;
 

@@ -1,4 +1,4 @@
-package com.xkings.fly.systems;
+package com.xkings.fly.system;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
@@ -6,12 +6,12 @@ import com.artemis.Entity;
 import com.artemis.annotations.Mapper;
 import com.artemis.systems.EntityProcessingSystem;
 import com.badlogic.gdx.math.Vector3;
-import com.xkings.fly.FollowCamera;
+import com.xkings.fly.component.FollowCamera;
 import com.xkings.fly.component.Move;
 import com.xkings.fly.component.PathPosition;
 import com.xkings.fly.component.Position;
 
-public class FlyCameraSystem extends EntityProcessingSystem {
+public class FlyerCameraSystem extends EntityProcessingSystem {
 
     @Mapper
     ComponentMapper<PathPosition> pathPositionMapper;
@@ -20,7 +20,7 @@ public class FlyCameraSystem extends EntityProcessingSystem {
     @Mapper
     ComponentMapper<FollowCamera> followCameraMapper;
 
-    public FlyCameraSystem() {
+    public FlyerCameraSystem() {
         super(Aspect.getAspectForAll(Position.class, Move.class, FollowCamera.class));
     }
 

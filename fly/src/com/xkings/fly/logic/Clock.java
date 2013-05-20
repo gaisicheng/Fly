@@ -1,10 +1,11 @@
-package com.xkings.fly;
+package com.xkings.fly.logic;
 
 import java.util.LinkedList;
 import java.util.List;
 
 public class Clock implements Runnable {
 
+    private final String name;
     private final boolean sleep;
     private volatile boolean init = true;
     private final boolean quit = false;
@@ -15,6 +16,7 @@ public class Clock implements Runnable {
     }
 
     public Clock(String name, boolean sleep) {
+        this.name = name;
         this.sleep = sleep;
         if (init) {
             new Thread(this, name).start();
@@ -80,6 +82,10 @@ public class Clock implements Runnable {
 
     public float getFPS() {
         return clocks / ((System.currentTimeMillis() - initTime) / 1000f);
+    }
+
+    public String getName() {
+        return name;
     }
 
 }

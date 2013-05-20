@@ -1,4 +1,4 @@
-package com.xkings.fly;
+package com.xkings.fly.entity;
 
 import java.util.ArrayList;
 import java.util.List;

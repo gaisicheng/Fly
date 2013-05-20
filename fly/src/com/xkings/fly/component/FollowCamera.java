@@ -1,4 +1,4 @@
-package com.xkings.fly;
+package com.xkings.fly.component;
 
 import com.artemis.Component;
 import com.badlogic.gdx.graphics.Camera;

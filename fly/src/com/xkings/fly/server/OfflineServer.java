@@ -1,43 +1,29 @@
-package com.xkings.fly;
-
-import java.util.List;
+package com.xkings.fly.server;
 
 import com.artemis.World;
 import com.badlogic.gdx.Input.Keys;
-import com.xkings.fly.GameStateManager.GameStatus;
+import com.xkings.fly.AbstractServer;
+import com.xkings.fly.App;
+import com.xkings.fly.Input;
 
 public class OfflineServer extends AbstractServer {
 
-    private final GameStateManager gsm;
     private final World world;
 
-    public OfflineServer(App app, GameStateManager gsm) {
+    public OfflineServer(App app) {
         super(app);
         this.world = app.getWorld();
-        this.gsm = gsm;
         //world.setSystem(new FlySystem());
 
     }
 
     @Override
     public void process(ClientCommand c) {
-        if (gsm.getStatus() == GameStatus.RECORD) {
-            processInput(c);
-
-            // replace timestamp with number of clocks game did to this point.
-            ClockCommand clockCommand = new ClockCommand(c, app.getClock().getClocks());
-            gsm.register(clockCommand);
-        }
+        processInput(c);
     }
 
     @Override
     public void updateInternal(float delta) {
-        if (gsm.getStatus() == GameStatus.REPLAY) {
-            List<ClientCommand> commands = gsm.getCommands(app.getClock().getClocks());
-            for (ClientCommand command : commands) {
-                processInput(command);
-            }
-        }
 
         world.setDelta(delta);
         world.process();

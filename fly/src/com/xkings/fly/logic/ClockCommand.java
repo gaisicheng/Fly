@@ -1,4 +1,6 @@
-package com.xkings.fly;
+package com.xkings.fly.logic;
+
+import com.xkings.fly.server.ClientCommand;
 
 
 public class ClockCommand extends ClientCommand {
