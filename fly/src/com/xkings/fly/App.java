@@ -2,22 +2,30 @@ package com.xkings.fly;
 
 import java.util.Random;
 
+import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenManager;
+
 import com.artemis.World;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g3d.model.still.StillModel;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Vector3;
 import com.xkings.fly.entity.Flyer;
 import com.xkings.fly.entity.Terrain;
 import com.xkings.fly.logic.Clock;
 import com.xkings.fly.server.OfflineServer;
 import com.xkings.fly.system.FlyerCameraSystem;
+import com.xkings.fly.system.FlyerCollisionSystem;
 import com.xkings.fly.system.FlyerMovementSystem;
 import com.xkings.fly.system.RenderGeometrySystem;
+import com.xkings.fly.tween.Vector3Accessor;
 import com.xkings.fly.utils.Param;
 import com.xkings.fly.utils.ParamHolder;
 
@@ -28,6 +36,7 @@ public class App implements ApplicationListener {
 
     public static final float WORLD_SIZE = 10f;
     public static final float FLYER_SIZE = 0.5f;
+    public static final Color BACKGROUND = new Color(1f, 1f, 1f, 1f);
 
     // Global parameters
     private final ParamHolder params;
@@ -44,6 +53,11 @@ public class App implements ApplicationListener {
 
     private static Flyer flyer;
     private Terrain terrain;
+
+    private static TweenManager tweenManager = new TweenManager();
+    static {
+        Tween.registerAccessor(Vector3.class, new Vector3Accessor());
+    }
 
     // Systems
     private RenderGeometrySystem renderGeometry;
@@ -75,8 +89,9 @@ public class App implements ApplicationListener {
     private void registerSystems() {
         renderGeometry = world.setSystem(new RenderGeometrySystem(camera), true);
         flyCamera = world.setSystem(new FlyerCameraSystem(), true);
-
         flyMovement = world.setSystem(new FlyerMovementSystem(), true);
+
+        server.addSystem(new FlyerCollisionSystem(worldModel));
     }
 
     @Override
@@ -84,18 +99,20 @@ public class App implements ApplicationListener {
     }
 
     float ang = 0f;
+    private StillModel worldModel;
 
     @Override
     public void render() {
-        Gdx.gl.glClearColor(0, 0.2f, 0, 1);
+        Gdx.gl.glClearColor(BACKGROUND.r, BACKGROUND.g, BACKGROUND.b, BACKGROUND.a);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT
                 | (Gdx.graphics.getBufferFormat().coverageSampling ? GL20.GL_COVERAGE_BUFFER_BIT_NV : 0));
 
         ang += 0.01f;
-        float x = (float) (Math.cos(ang) * 5);
-        float y = (float) (Math.sin(ang) * 5);
+        int offset = 10;
+        float x = (float) (Math.cos(ang) * offset);
+        float y = (float) (Math.sin(ang) * offset);
 
-        cornerCamera.position.set(x, 5, y);
+        cornerCamera.position.set(x, offset, y);
         cornerCamera.lookAt(0, 0, 0);
         cornerCamera.update();
 
@@ -110,6 +127,9 @@ public class App implements ApplicationListener {
             systemInfo.addInfo("GPU: " + String.valueOf(Gdx.graphics.getFramesPerSecond()));
             systemInfo.addInfo(clock.getName() + ": " + String.valueOf(Math.round(clock.getFPS())));
             systemInfo.addInfo("Clocks: " + String.valueOf(clock.getClocks()));
+            systemInfo.addInfo("Camera.x: " + currentCamera.position.x);
+            systemInfo.addInfo("Camera.y: " + currentCamera.position.y);
+            systemInfo.addInfo("Camera.z: " + currentCamera.position.z);
             systemInfo.render(onScreenRasterRender);
         }
     }
@@ -117,14 +137,16 @@ public class App implements ApplicationListener {
     private void initialize(int width, int height) {
         camera = new PerspectiveCamera(67, width, height);
         cornerCamera = new PerspectiveCamera(67, width, height);
-        currentCamera = cornerCamera;
 
+        currentCamera = cornerCamera;
         onScreenRasterRender = new SpriteBatch();
+
         registerSystems();
         world.initialize();
 
         flyer = new Flyer(world, camera, -WORLD_SIZE / 2f, 1, 0);
-        terrain = new Terrain(world);
+        worldModel = Assets.getTerrain();
+        terrain = new Terrain(world, worldModel);
 
         Gdx.input.setInputProcessor(new Input(server));
         initialize = false;
@@ -170,6 +192,10 @@ public class App implements ApplicationListener {
 
     public static Flyer getFlyer() {
         return flyer;
+    }
+
+    public static TweenManager getTweenManager() {
+        return tweenManager;
     }
 
 }

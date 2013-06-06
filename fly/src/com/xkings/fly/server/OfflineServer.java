@@ -1,5 +1,6 @@
 package com.xkings.fly.server;
 
+import com.artemis.EntitySystem;
 import com.artemis.World;
 import com.badlogic.gdx.Input.Keys;
 import com.xkings.fly.AbstractServer;
@@ -13,8 +14,10 @@ public class OfflineServer extends AbstractServer {
     public OfflineServer(App app) {
         super(app);
         this.world = app.getWorld();
-        //world.setSystem(new FlySystem());
+    }
 
+    public void addSystem(EntitySystem system) {
+        world.setSystem(system);
     }
 
     @Override
@@ -28,7 +31,7 @@ public class OfflineServer extends AbstractServer {
         world.setDelta(delta);
         world.process();
 
-        // App.getTweenManager().update(delta);
+        App.getTweenManager().update(delta);
     }
 
     private void processInput(ClientCommand c) {
@@ -37,9 +40,9 @@ public class OfflineServer extends AbstractServer {
                 App.toggleCamera();
             }
         } else if (c.getAction() == Input.MOUSE_MOVE_X) {
-            App.getFlyer().getOffset().setOffsetFromMouseX(c.getValue());
+            App.getFlyer().getScreenCoordinates().setX(c.getValue());
         } else if (c.getAction() == Input.MOUSE_MOVE_Y) {
-            App.getFlyer().getOffset().setOffsetFromMouseY(c.getValue());
+            App.getFlyer().getScreenCoordinates().setY(c.getValue());
         }
 
     }

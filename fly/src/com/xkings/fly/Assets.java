@@ -13,7 +13,7 @@ public final class Assets {
     private static StillModel ten;
 
     static {
-        rocks = loadModel("rocks.obj");
+        rocks = loadModel("land.obj");
         terrain = loadModel("terrain.obj");
         flyer = loadModel("flyer.obj");
         ten = loadModel("10x10.obj");

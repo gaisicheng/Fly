@@ -10,11 +10,14 @@ import com.xkings.fly.component.FollowCamera;
 import com.xkings.fly.component.Move;
 import com.xkings.fly.component.PathPosition;
 import com.xkings.fly.component.Position;
+import com.xkings.fly.component.ScreenCoordinates;
 
 public class FlyerCameraSystem extends EntityProcessingSystem {
 
     @Mapper
     ComponentMapper<PathPosition> pathPositionMapper;
+    @Mapper
+    ComponentMapper<ScreenCoordinates> positionOffsetMapper;
     @Mapper
     ComponentMapper<Move> moveMapper;
     @Mapper
@@ -26,16 +29,15 @@ public class FlyerCameraSystem extends EntityProcessingSystem {
 
     @Override
     protected void process(Entity e) {
-        Vector3 position = pathPositionMapper.get(e).getPoint();
-        Vector3 move = moveMapper.get(e).getPoint();
-
+        Vector3 pathPoint = pathPositionMapper.get(e).getPoint();
         FollowCamera followCamera = followCameraMapper.get(e);
-        followCamera.getCamera().direction.set(move);
 
+        Vector3 direction = followCamera.getCamera().direction;
         float distance = followCamera.getDistance();
-        Vector3 oppositeDirection = followCamera.getCamera().direction.cpy().scl(-distance);
 
-        followCamera.getCamera().position.set(position).add(oppositeDirection);
+        direction.set(moveMapper.get(e).getPoint());
 
+        Vector3 oppositeVector = direction.cpy().scl(-distance);
+        followCamera.getCamera().position.set(pathPoint).add(oppositeVector);
     }
 }

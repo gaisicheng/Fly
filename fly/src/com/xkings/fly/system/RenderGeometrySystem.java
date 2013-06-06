@@ -59,6 +59,9 @@ public class RenderGeometrySystem extends EntityProcessingSystem {
         shader.setUniformMatrix("u_MVPMatrix", camera.combined);
         shader.setUniformMatrix("u_MVMatrix", camera.view);
         shader.setUniformf("u_lightPos", App.getFlyer().getPosition().getPoint());
+        shader.setUniformf("u_lightPos", App.getFlyer().getPosition().getPoint());
+        shader.setUniformf("sight", 15);
+        shader.setUniformf("backgroundColor", App.BACKGROUND);
 
         StillModel model = modelMapper.get(e).getModel();
         for (SubMesh submesh : model.getSubMeshes()) {
