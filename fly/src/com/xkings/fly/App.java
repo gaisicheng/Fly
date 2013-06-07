@@ -104,8 +104,10 @@ public class App implements ApplicationListener {
     @Override
     public void render() {
         Gdx.gl.glClearColor(BACKGROUND.r, BACKGROUND.g, BACKGROUND.b, BACKGROUND.a);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT
-                | (Gdx.graphics.getBufferFormat().coverageSampling ? GL20.GL_COVERAGE_BUFFER_BIT_NV : 0));
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT
+                | GL20.GL_DEPTH_BUFFER_BIT
+                | (Gdx.graphics.getBufferFormat().coverageSampling ? GL20.GL_COVERAGE_BUFFER_BIT_NV
+                        : 0));
 
         ang += 0.01f;
         int offset = 10;
@@ -125,7 +127,8 @@ public class App implements ApplicationListener {
                 systemInfo = new SystemInfo();
             }
             systemInfo.addInfo("GPU: " + String.valueOf(Gdx.graphics.getFramesPerSecond()));
-            systemInfo.addInfo(clock.getName() + ": " + String.valueOf(Math.round(clock.getFPS())));
+            systemInfo.addInfo(clock.getName() + ": "
+                    + String.valueOf(Math.round(clock.getFPS())));
             systemInfo.addInfo("Clocks: " + String.valueOf(clock.getClocks()));
             systemInfo.addInfo("Camera.x: " + currentCamera.position.x);
             systemInfo.addInfo("Camera.y: " + currentCamera.position.y);
@@ -141,11 +144,11 @@ public class App implements ApplicationListener {
         currentCamera = cornerCamera;
         onScreenRasterRender = new SpriteBatch();
 
+        worldModel = Assets.getTerrain();
         registerSystems();
         world.initialize();
 
         flyer = new Flyer(world, camera, -WORLD_SIZE / 2f, 1, 0);
-        worldModel = Assets.getTerrain();
         terrain = new Terrain(world, worldModel);
 
         Gdx.input.setInputProcessor(new Input(server));

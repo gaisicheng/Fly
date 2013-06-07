@@ -11,7 +11,8 @@ public class Shader {
     private static Shader instance;
 
     private enum ShaderType {
-        vsh, fsh;
+        vsh,
+        fsh;
     }
 
     private static class ShaderStructure {
