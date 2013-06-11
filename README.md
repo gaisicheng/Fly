@@ -1,1 +1,1 @@
-3D simple fantasy flight simulator developed in LibGDX
+3D simple fantasy flight simulator developed in LibGDX 
