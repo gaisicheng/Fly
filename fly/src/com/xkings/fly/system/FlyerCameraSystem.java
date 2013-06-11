@@ -14,6 +14,9 @@ import com.xkings.fly.component.ScreenCoordinates;
 
 public class FlyerCameraSystem extends EntityProcessingSystem {
 
+    private static final float CAMERA_OFFSET = 0.5f;
+    @Mapper
+    ComponentMapper<Position> positionMapper;
     @Mapper
     ComponentMapper<PathPosition> pathPositionMapper;
     @Mapper
@@ -29,6 +32,7 @@ public class FlyerCameraSystem extends EntityProcessingSystem {
 
     @Override
     protected void process(Entity e) {
+        Vector3 flyerPosition = positionMapper.get(e).getPoint();
         Vector3 pathPoint = pathPositionMapper.get(e).getPoint();
         FollowCamera followCamera = followCameraMapper.get(e);
 
@@ -38,6 +42,12 @@ public class FlyerCameraSystem extends EntityProcessingSystem {
         direction.set(moveMapper.get(e).getPoint());
 
         Vector3 oppositeVector = direction.cpy().scl(-distance);
-        followCamera.getCamera().position.set(pathPoint).add(oppositeVector);
+
+        Vector3 cameraPosition = followCamera.getCamera().position;
+        cameraPosition.set(pathPoint);
+
+        Vector3 cameraOffset = flyerPosition.cpy().sub(cameraPosition).scl(CAMERA_OFFSET);
+
+        cameraPosition.add(oppositeVector).add(cameraOffset);
     }
 }
