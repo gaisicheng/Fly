@@ -7,16 +7,12 @@ import com.badlogic.gdx.graphics.g3d.model.still.StillModel;
 
 public final class Assets {
 
-    private final static StillModel rocks;
     private final static StillModel terrain;
     private final static StillModel flyer;
-    private static StillModel ten;
 
     static {
-        rocks = loadModel("land.obj");
-        terrain = loadModel("terrain.obj");
+        terrain = loadModel("level0.obj");
         flyer = loadModel("flyer.obj");
-        ten = loadModel("10x10.obj");
 
         // flyer.scale(App.FLYER_SIZE, App.FLYER_SIZE, App.FLYER_SIZE);
     }
@@ -29,7 +25,7 @@ public final class Assets {
     }
 
     public static StillModel getTerrain() {
-        return rocks;
+        return terrain;
     }
 
     public static StillModel getFlyer() {

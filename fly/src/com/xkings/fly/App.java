@@ -141,7 +141,7 @@ public class App implements ApplicationListener {
         camera = new PerspectiveCamera(67, width, height);
         cornerCamera = new PerspectiveCamera(67, width, height);
 
-        currentCamera = cornerCamera;
+        currentCamera = camera;
         onScreenRasterRender = new SpriteBatch();
 
         worldModel = Assets.getTerrain();

@@ -53,7 +53,7 @@ public class FlyerMovementSystem extends EntityProcessingSystem {
 
         Vector2 screenCoordinates = screenCoordinatesMapper.get(e).getPoint().cpy();
 
-        position.set(screenToWorld(camera, screenCoordinates));
+        position.set(screenToWorld(camera, screenCoordinates, -pathPosition.x));
     }
 
     /**
@@ -63,12 +63,16 @@ public class FlyerMovementSystem extends EntityProcessingSystem {
      *            which world is projected from
      * @param screenCoordinates
      *            viewport coordinates
+     * @param distance
+     *            distance of projection plane
      * @return position in the world
      */
-    private Vector3 screenToWorld(FollowCamera camera, Vector2 screenCoordinates) {
+    private Vector3 screenToWorld(FollowCamera camera, Vector2 screenCoordinates,
+            float distance) {
         Vector3 planeNormal = camera.getCamera().direction.cpy();
-        Plane plane = new Plane(planeNormal, -camera.getCamera().position.x - camera.getDistance());
+        Plane plane = new Plane(planeNormal, distance);
         Ray pickRay = App.getCamera().getPickRay(screenCoordinates.x, screenCoordinates.y);
+
         Vector3 worldPosition = new Vector3();
         Intersector.intersectRayPlane(pickRay, plane, worldPosition);
         return worldPosition;

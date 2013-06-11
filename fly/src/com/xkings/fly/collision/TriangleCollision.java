@@ -60,6 +60,7 @@ public class TriangleCollision {
         }
 
         int componentSize = 4;
+
         final FloatBuffer verts = m.getVerticesBuffer();
         final int offset = positionAttribute.offset / componentSize;
         final int vertexSize = m.getVertexAttributes().vertexSize / componentSize;
