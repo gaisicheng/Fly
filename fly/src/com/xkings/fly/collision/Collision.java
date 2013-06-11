@@ -73,6 +73,7 @@ public class Collision {
         Vector3 p = bbc.getPosition();
         Vector3 min = bb.min.cpy().add(p);
         Vector3 max = bb.max.cpy().add(p);
+        System.out.println(min + " " + max);
         return TriangleCollision.intersectTriangles(ray, mesh, min, max);
     }
 }

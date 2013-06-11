@@ -50,66 +50,39 @@ public class TriangleCollision {
      * </pre>
      */
     public static boolean intersectTriangles(Ray ray, Mesh m, Vector3 a, Vector3 b) {
-
         VertexAttribute positionAttribute = m
                 .getVertexAttribute(VertexAttributes.Usage.Position);
 
         if (positionAttribute.numComponents != 3) {
-            throw new RuntimeException("triangle list size is not a multiple of 3");
+            throw new RuntimeException(
+                    "Position attributes must have 3 components, insted of "
+                            + positionAttribute.numComponents + " components");
         }
 
         int componentSize = 4;
-        int vertexSize = m.getVertexSize() / componentSize;
-        int attributeOffset = positionAttribute.offset / componentSize;
-        FloatBuffer buffer = m.getVerticesBuffer();
-        int vertexes = buffer.capacity() / vertexSize;
+        final FloatBuffer verts = m.getVerticesBuffer();
+        final int offset = positionAttribute.offset / componentSize;
+        final int vertexSize = m.getVertexAttributes().vertexSize / componentSize;
 
-        for (int i = 0; i < vertexes - 6; i += 9) {
-            boolean result = intersectRayTriangle(ray, tmp1.set(
-                    getVertice(i + 0, attributeOffset, vertexSize, buffer),
-                    getVertice(i + 1, attributeOffset, vertexSize, buffer),
-                    getVertice(i + 2, attributeOffset, vertexSize, buffer)), tmp2.set(
-                    getVertice(i + 3, attributeOffset, vertexSize, buffer),
-                    getVertice(i + 4, attributeOffset, vertexSize, buffer),
-                    getVertice(i + 5, attributeOffset, vertexSize, buffer)), tmp3.set(
-                    getVertice(i + 6, attributeOffset, vertexSize, buffer),
-                    getVertice(i + 7, attributeOffset, vertexSize, buffer),
-                    getVertice(i + 8, attributeOffset, vertexSize, buffer)), tmp);
+        for (int i = 0; i < m.getNumVertices(); i += 3) {
 
-            System.out.println(tmp1);
-            System.out.println(tmp2);
-            System.out.println(tmp3);
-            System.out.println();
+            int p0 = offset + ((i + 0) * vertexSize);
+            int p1 = offset + ((i + 1) * vertexSize);
+            int p3 = offset + ((i + 2) * vertexSize);
+
+            boolean result = intersectRayTriangle(ray,
+                    tmp1.set(verts.get(p0 + 0), verts.get(p0 + 1), verts.get(p0 + 2)),
+                    tmp2.set(verts.get(p1 + 0), verts.get(p1 + 1), verts.get(p1 + 2)),
+                    tmp3.set(verts.get(p3 + 0), verts.get(p3 + 1), verts.get(p3 + 2)), tmp);
 
             if (result) {
-                System.out.println("results");
                 if (Collision.inBetween(a, b, tmp)) {
                     return true;
                 }
             }
         }
 
-        /*
-         * 
-                for (int i = 0; i < triangles.length - 6; i += 9) {
-                    boolean result = intersectRayTriangle(ray,
-                            tmp1.set(triangles[i], triangles[i + 1], triangles[i + 2]),
-                            tmp2.set(triangles[i + 3], triangles[i + 4], triangles[i + 5]),
-                            tmp3.set(triangles[i + 6], triangles[i + 7], triangles[i + 8]), tmp);
-
-                    if (result) {
-                        if (inBetween(a, b, tmp)) {
-                            return true;
-                        }
-                    }
-                }
-         */
         return false;
-
-    }
-
-    private static float getVertice(int n, int offset, int size, FloatBuffer floatBuffer) {
-        return floatBuffer.get(n * size + offset);
     }
 
     private static Vector3 tmp4 = new Vector3();
