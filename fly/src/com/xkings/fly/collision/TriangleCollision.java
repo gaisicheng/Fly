@@ -11,10 +11,11 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 
 /**
- * This class contains method copied and modified from {@link Intersector}
- * class. Standard methods from there are using public static
- * {@link Vector3#tmp} properties that are accessed from all over the API. When
- * run in parallel thread, synchronization issues arise.
+ * This class contains method copied and modified from
+ * {@link Intersector} class. Standard methods from there
+ * are using public static {@link Vector3#tmp} properties
+ * that are accessed from all over the API. When run in
+ * parallel thread, synchronization issues arise.
  * 
  * @author xkings
  * 
@@ -25,6 +26,21 @@ public class TriangleCollision {
     private static Vector3 tmp1 = new Vector3();
     private static Vector3 tmp2 = new Vector3();
     private static Vector3 tmp3 = new Vector3();
+
+    private static Vector3 min = new Vector3(-Float.MAX_VALUE, -Float.MAX_VALUE,
+            -Float.MAX_VALUE);
+    private static Vector3 max = new Vector3(Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE);
+
+    /**
+     * {@inheritDoc}
+     * 
+     * <pre>
+     * This method is optimized.
+     * </pre>
+     */
+    public static boolean intersectTriangles(Ray ray, Mesh m) {
+        return intersectTriangles(ray, m, min, max);
+    }
 
     /**
      * {@inheritDoc}
@@ -60,7 +76,13 @@ public class TriangleCollision {
                     getVertice(i + 7, attributeOffset, vertexSize, buffer),
                     getVertice(i + 8, attributeOffset, vertexSize, buffer)), tmp);
 
+            System.out.println(tmp1);
+            System.out.println(tmp2);
+            System.out.println(tmp3);
+            System.out.println();
+
             if (result) {
+                System.out.println("results");
                 if (Collision.inBetween(a, b, tmp)) {
                     return true;
                 }
@@ -107,10 +129,11 @@ public class TriangleCollision {
      * @param plane
      *            The plane
      * @param intersection
-     *            The vector the intersection point is written to (optional)
+     *            The vector the intersection point is
+     *            written to (optional)
      * @return Whether an intersection is present.
-     * @see Intersector#intersectRayPlane(Ray ray, Plane plane, Vector3
-     *      intersection)
+     * @see Intersector#intersectRayPlane(Ray ray, Plane
+     *      plane, Vector3 intersection)
      */
     public static boolean intersectRayPlane(Ray ray, Plane plane, Vector3 intersection) {
         float denom = ray.direction.dot(plane.getNormal());
@@ -158,8 +181,8 @@ public class TriangleCollision {
      * @param intersection
      *            The intersection point (optional)
      * 
-     * @see Intersector#intersectRayTriangle(Ray, Vector3, Vector3, Vector3,
-     *      Vector3)
+     * @see Intersector#intersectRayTriangle(Ray, Vector3,
+     *      Vector3, Vector3, Vector3)
      */
     public static boolean intersectRayTriangle(Ray ray, Vector3 t1, Vector3 t2, Vector3 t3,
             Vector3 intersection) {

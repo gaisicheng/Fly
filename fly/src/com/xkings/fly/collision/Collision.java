@@ -32,8 +32,8 @@ public class Collision {
     }
 
     /**
-     * Checks if {@code p} is in a cube delimited by minimum {@code min} and
-     * maximum {@code max}
+     * Checks if {@code p} is in a cube delimited by minimum
+     * {@code min} and maximum {@code max}
      * 
      * @param min
      *            point min
@@ -41,8 +41,9 @@ public class Collision {
      *            point max
      * @param p
      *            point p
-     * @return {@code true} if point {@code p} is between {@code min} and
-     *         {@code max}, {@code false} otherwise
+     * @return {@code true} if point {@code p} is between
+     *         {@code min} and {@code max}, {@code false}
+     *         otherwise
      */
     public static boolean inBetween(Vector3 min, Vector3 max, Vector3 p) {
         // @formatter:off
@@ -63,11 +64,11 @@ public class Collision {
         Ray zRay = new Ray(center, Vector3.Z);
 
         return intersectPolygon(xRay, mesh, boundingBox)
-                && intersectPolygon(yRay, mesh, boundingBox)
-                && intersectPolygon(zRay, mesh, boundingBox);
+                || intersectPolygon(yRay, mesh, boundingBox)
+                || intersectPolygon(zRay, mesh, boundingBox);
     }
 
-    private static boolean intersectPolygon(Ray ray, Mesh mesh, BoundingBoxComponent bbc) {
+    public static boolean intersectPolygon(Ray ray, Mesh mesh, BoundingBoxComponent bbc) {
         BoundingBox bb = bbc.getBoundingBox();
         Vector3 p = bbc.getPosition();
         Vector3 min = bb.min.cpy().add(p);
