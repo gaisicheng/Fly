@@ -5,7 +5,9 @@ import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.annotations.Mapper;
 import com.artemis.systems.EntityProcessingSystem;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -69,6 +71,7 @@ public class FlyerMovementSystem extends EntityProcessingSystem {
      */
     private Vector3 screenToWorld(FollowCamera camera, Vector2 screenCoordinates,
             float distance) {
+        screenCoordinates = clampScreenCoordinates(screenCoordinates, 0.8f);
         Vector3 planeNormal = camera.getCamera().direction.cpy();
         Plane plane = new Plane(planeNormal, distance);
         Ray pickRay = App.getCamera().getPickRay(screenCoordinates.x, screenCoordinates.y);
@@ -76,5 +79,31 @@ public class FlyerMovementSystem extends EntityProcessingSystem {
         Vector3 worldPosition = new Vector3();
         Intersector.intersectRayPlane(pickRay, plane, worldPosition);
         return worldPosition;
+    }
+
+    /**
+     * Clamps screen coordinates into frame with given ratio
+     * 
+     * @param screenCoordinates
+     *            screen coordinated from mouse input
+     * @param ratio
+     *            size of clamped frame, from 0 to 1
+     * @return clamped screen coordinates
+     */
+    private Vector2 clampScreenCoordinates(Vector2 screenCoordinates, float ratio) {
+        if (ratio < 0 || ratio > 1) {
+            throw new IllegalArgumentException(
+                    "Ratio must be greater than 0 and lesser than 1.");
+        }
+
+        float xOffset = Gdx.graphics.getWidth() * ((1 - ratio) / 2f);
+        float yOffset = Gdx.graphics.getHeight() * ((1 - ratio) / 2f);
+
+        Vector2 min = new Vector2(xOffset, yOffset);
+        Vector2 max = new Vector2(Gdx.graphics.getWidth() - xOffset, Gdx.graphics.getHeight()
+                - yOffset);
+
+        return new Vector2(MathUtils.clamp(screenCoordinates.x, min.x, max.x),
+                MathUtils.clamp(screenCoordinates.y, min.y, max.y));
     }
 }
