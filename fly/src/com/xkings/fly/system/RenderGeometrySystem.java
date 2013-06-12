@@ -17,6 +17,7 @@ import com.xkings.fly.component.ShaderComponent;
 import com.xkings.fly.component.SubMeshComponent;
 
 public class RenderGeometrySystem extends EntityProcessingSystem {
+    private static final int SIGHT = 15;
     @Mapper
     ComponentMapper<ModelComponent> modelMapper;
     @Mapper
@@ -59,7 +60,7 @@ public class RenderGeometrySystem extends EntityProcessingSystem {
         shader.setUniformMatrix("u_MVMatrix", camera.view);
         shader.setUniformf("u_lightPos", App.getFlyer().getPosition().getPoint());
         shader.setUniformf("u_lightPos", App.getFlyer().getPosition().getPoint());
-        shader.setUniformf("sight", 15);
+        shader.setUniformf("sight", SIGHT);
         shader.setUniformf("backgroundColor", App.BACKGROUND);
 
         for (SubMeshComponent submesh : modelMapper.get(e).getMeshes()) {
@@ -67,7 +68,13 @@ public class RenderGeometrySystem extends EntityProcessingSystem {
             for (int i = 0; i < material.getNumberOfAttributes(); i++) {
                 material.getAttribute(i).bind(shader);
             }
-            submesh.getSubMesh().getMesh().render(shader, submesh.getSubMesh().primitiveType);
+
+            Vector3 flyerPosition = App.getFlyer().getPosition().getPoint();
+            Vector3 meshPosition = submesh.getBoundingBoxComponent().getCenter();
+            if (flyerPosition.x <= meshPosition.x && flyerPosition.x - SIGHT < meshPosition.x) {
+                submesh.getMesh().render(shader, submesh.getSubMesh().primitiveType);
+            }
+
         }
         shader.end();
 

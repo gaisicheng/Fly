@@ -1,6 +1,7 @@
 package com.xkings.fly.component;
 
 import com.artemis.Component;
+import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.g3d.model.SubMesh;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
@@ -20,6 +21,10 @@ public class SubMeshComponent extends Component {
 
     public SubMesh getSubMesh() {
         return subMesh;
+    }
+
+    public Mesh getMesh() {
+        return subMesh.mesh;
     }
 
     public BoundingBoxComponent getBoundingBoxComponent() {

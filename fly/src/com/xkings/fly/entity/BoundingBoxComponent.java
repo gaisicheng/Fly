@@ -22,4 +22,8 @@ public class BoundingBoxComponent extends Component {
         return position;
     }
 
+    public Vector3 getCenter() {
+        return new Vector3(boundingBox.getCenter()).add(position);
+    }
+
 }
