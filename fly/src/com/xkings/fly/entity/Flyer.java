@@ -3,7 +3,6 @@ package com.xkings.fly.entity;
 import com.artemis.World;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.math.collision.BoundingBox;
 import com.xkings.fly.Assets;
 import com.xkings.fly.component.FollowCamera;
 import com.xkings.fly.component.ModelComponent;
@@ -40,14 +39,10 @@ public class Flyer extends ConcreteEntity {
         rotaion = new Rotation(0, 0f, 0);
         size = new Size(1, 1, 1);
         move = new Move(1, 0, 0);
-        move.getPoint().y = 0;
         speed = new Speed(0.05f);
-        model = new ModelComponent(Assets.getFlyer());
+        model = new ModelComponent(Assets.getFlyer(), position.getPoint());
 
-        BoundingBox bb = new BoundingBox();
-        model.getModel().getBoundingBox(bb);
-
-        boundingBox = new BoundingBoxComponent(bb, position.getPoint());
+        boundingBox = model.getMeshes().get(0).getBoundingBoxComponent();
         shader = new ShaderComponent(Shader.getShader("normal"), new Color(0, 0, 1, 1));
         followCamera = new FollowCamera(camera, 3f);
 
@@ -63,7 +58,6 @@ public class Flyer extends ConcreteEntity {
         bag.add(followCamera);
         bag.add(boundingBox);
 
-        register();
     }
 
     public Position getPosition() {

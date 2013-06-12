@@ -91,7 +91,7 @@ public class App implements ApplicationListener {
         flyCamera = world.setSystem(new FlyerCameraSystem(), true);
         flyMovement = world.setSystem(new FlyerMovementSystem(), true);
 
-        server.addSystem(new FlyerCollisionSystem(worldModel));
+        server.addSystem(new FlyerCollisionSystem(terrain));
     }
 
     @Override
@@ -138,18 +138,21 @@ public class App implements ApplicationListener {
     }
 
     private void initialize(int width, int height) {
-        camera = new PerspectiveCamera(67, width, height);
+        camera = new PerspectiveCamera(50, width, height);
         cornerCamera = new PerspectiveCamera(67, width, height);
 
         currentCamera = camera;
         onScreenRasterRender = new SpriteBatch();
 
         worldModel = Assets.getTerrain();
+        flyer = new Flyer(world, camera, -WORLD_SIZE / 2f, 1, 0);
+        terrain = new Terrain(world, worldModel);
+
         registerSystems();
         world.initialize();
 
-        flyer = new Flyer(world, camera, -WORLD_SIZE / 2f, 1, 0);
-        terrain = new Terrain(world, worldModel);
+        flyer.register();
+        terrain.register();
 
         Gdx.input.setInputProcessor(new Input(server));
         initialize = false;

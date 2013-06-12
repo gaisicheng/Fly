@@ -5,14 +5,12 @@ import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.annotations.Mapper;
 import com.artemis.systems.EntityProcessingSystem;
-import com.badlogic.gdx.graphics.g3d.model.SubMesh;
-import com.badlogic.gdx.graphics.g3d.model.still.StillModel;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.math.collision.BoundingBox;
 import com.xkings.fly.collision.Collision;
 import com.xkings.fly.component.Position;
 import com.xkings.fly.component.Size;
+import com.xkings.fly.component.SubMeshComponent;
 import com.xkings.fly.entity.BoundingBoxComponent;
+import com.xkings.fly.entity.Terrain;
 
 public class FlyerCollisionSystem extends EntityProcessingSystem {
 
@@ -22,28 +20,21 @@ public class FlyerCollisionSystem extends EntityProcessingSystem {
     ComponentMapper<Size> sizeMapper;
     @Mapper
     ComponentMapper<BoundingBoxComponent> boundingBoxMapper;
-    private final StillModel worldModel;
+    private final Terrain terrain;
 
-    public FlyerCollisionSystem(StillModel worldModel) {
+    public FlyerCollisionSystem(Terrain terrain) {
         super(Aspect.getAspectForAll(Position.class, Size.class));
-        this.worldModel = worldModel;
+        this.terrain = terrain;
     }
 
     @Override
     protected void process(Entity e) {
-        Vector3 position = positionMapper.get(e).getPoint();
-        Vector3 size = sizeMapper.get(e).getPoint();
         BoundingBoxComponent boundingBox = boundingBoxMapper.get(e);
 
-        SubMesh[] meshes = worldModel.getSubMeshes();
-
         boolean condition = false;
-        for (SubMesh mesh : meshes) {
-            BoundingBox bb = new BoundingBox();
-            mesh.getBoundingBox(bb);
-            if (Collision.intersectBoundingBoxes(new BoundingBoxComponent(bb, Vector3.Zero),
-                    boundingBox)) {
-                if (Collision.intersectPolygon(boundingBox, mesh.getMesh())) {
+        for (SubMeshComponent mesh : terrain.getMesh().getMeshes()) {
+            if (Collision.intersectBoundingBoxes(mesh.getBoundingBoxComponent(), boundingBox)) {
+                if (Collision.intersectPolygon(boundingBox, mesh.getSubMesh().getMesh())) {
                     condition = true;
                 }
             }

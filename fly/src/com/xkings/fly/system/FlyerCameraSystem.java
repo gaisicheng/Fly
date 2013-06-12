@@ -14,7 +14,7 @@ import com.xkings.fly.component.ScreenCoordinates;
 
 public class FlyerCameraSystem extends EntityProcessingSystem {
 
-    private static final float CAMERA_OFFSET = 0.3f;
+    private static final float CAMERA_OFFSET = 0.5f;
     @Mapper
     ComponentMapper<Position> positionMapper;
     @Mapper

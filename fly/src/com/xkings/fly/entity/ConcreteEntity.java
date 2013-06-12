@@ -30,7 +30,7 @@ public abstract class ConcreteEntity {
         return entity;
     }
 
-    protected void register() {
+    public void register() {
         this.createEntity().addToWorld();
     }
 

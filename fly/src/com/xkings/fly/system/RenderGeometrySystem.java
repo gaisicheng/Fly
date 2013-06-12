@@ -7,8 +7,6 @@ import com.artemis.annotations.Mapper;
 import com.artemis.systems.EntityProcessingSystem;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g3d.materials.Material;
-import com.badlogic.gdx.graphics.g3d.model.SubMesh;
-import com.badlogic.gdx.graphics.g3d.model.still.StillModel;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector3;
 import com.xkings.fly.App;
@@ -16,6 +14,7 @@ import com.xkings.fly.component.ModelComponent;
 import com.xkings.fly.component.Position;
 import com.xkings.fly.component.Rotation;
 import com.xkings.fly.component.ShaderComponent;
+import com.xkings.fly.component.SubMeshComponent;
 
 public class RenderGeometrySystem extends EntityProcessingSystem {
     @Mapper
@@ -63,13 +62,12 @@ public class RenderGeometrySystem extends EntityProcessingSystem {
         shader.setUniformf("sight", 15);
         shader.setUniformf("backgroundColor", App.BACKGROUND);
 
-        StillModel model = modelMapper.get(e).getModel();
-        for (SubMesh submesh : model.getSubMeshes()) {
-            Material material = submesh.material;
+        for (SubMeshComponent submesh : modelMapper.get(e).getMeshes()) {
+            Material material = submesh.getSubMesh().material;
             for (int i = 0; i < material.getNumberOfAttributes(); i++) {
                 material.getAttribute(i).bind(shader);
             }
-            submesh.getMesh().render(shader, submesh.primitiveType);
+            submesh.getSubMesh().getMesh().render(shader, submesh.getSubMesh().primitiveType);
         }
         shader.end();
 
