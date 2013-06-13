@@ -6,14 +6,14 @@ attribute vec4 a_position;     // Per-vertex position information we will pass i
 attribute vec4 a_color;        // Per-vertex color information we will pass in.
 attribute vec3 a_normal;       // Per-vertex normal information we will pass in.
 
-varying float v_position;
+varying vec4 v_position;
 varying float v_diffuse;
 
 // The entry point for our vertex shader.
 void main()
 {
 	    // Get a lighting direction vector from the light to the vertex.
-	    vec3 lightVector = normalize(u_lightPos - a_position);
+	    vec3 lightVector = normalize(u_lightPos - a_position.xyz);
 
 	    lightVector = vec3(-1,1,-1);
 	    // Calculate the dot product of the light vector and vertex normal. If the normal and light vector are
