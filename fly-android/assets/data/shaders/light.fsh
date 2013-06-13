@@ -12,7 +12,7 @@ uniform float sight;
 // The entry point for our fragment shader.
 void main()
 {
-	float distance  = length(u_lightPos.x - v_position);
+	float distance  = length(u_lightPos.x - v_position.x);
 
 	float factor = distance / sight;
     // Multiply the color by the diffuse illumination level to get final output color.
