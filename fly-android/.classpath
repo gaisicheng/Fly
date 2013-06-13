@@ -8,6 +8,7 @@
 	<classpathentry exported="true" kind="lib" path="/fly/libs/gdx.jar" sourcepath="/fly/libs/gdx-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/gdx-backend-android.jar" sourcepath="libs/gdx-backend-android-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="/fly/libs/tween-engine-api.jar" sourcepath="/fly/libs/tween-engine-api-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="/fly/libs/artemis.jar" sourcepath="/fly/libs/artemis-sources.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

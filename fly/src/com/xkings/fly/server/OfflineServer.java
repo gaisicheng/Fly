@@ -2,18 +2,21 @@ package com.xkings.fly.server;
 
 import com.artemis.EntitySystem;
 import com.artemis.World;
-import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.Application.ApplicationType;
+import com.badlogic.gdx.Gdx;
 import com.xkings.fly.AbstractServer;
 import com.xkings.fly.App;
-import com.xkings.fly.Input;
 
 public class OfflineServer extends AbstractServer {
 
     private final World world;
+    private final InputInterpret inputInterpret;
 
     public OfflineServer(App app) {
         super(app);
         this.world = app.getWorld();
+        this.inputInterpret = Gdx.app.getType() == ApplicationType.Desktop ? new DesktopInputInterpret()
+                : new MobileInputInterpret();
     }
 
     public void addSystem(EntitySystem system) {
@@ -22,7 +25,7 @@ public class OfflineServer extends AbstractServer {
 
     @Override
     public void process(ClientCommand c) {
-        processInput(c);
+        inputInterpret.processInput(c);
     }
 
     @Override
@@ -32,19 +35,6 @@ public class OfflineServer extends AbstractServer {
         world.process();
 
         App.getTweenManager().update(delta);
-    }
-
-    private void processInput(ClientCommand c) {
-        if (c.getAction() == Keys.W) {
-            if (c.getValue() == 1) {
-                App.toggleCamera();
-            }
-        } else if (c.getAction() == Input.MOUSE_MOVE_X) {
-            App.getFlyer().getScreenCoordinates().setX(c.getValue());
-        } else if (c.getAction() == Input.MOUSE_MOVE_Y) {
-            App.getFlyer().getScreenCoordinates().setY(c.getValue());
-        }
-
     }
 
 }

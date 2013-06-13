@@ -64,6 +64,7 @@ public class App implements ApplicationListener {
     private FlyerCameraSystem flyCamera;
     private FlyerMovementSystem flyMovement;
     private OfflineServer server;
+    private Input input;
 
     public App(String[] args) {
         params = new ParamHolder(args);
@@ -79,7 +80,9 @@ public class App implements ApplicationListener {
         clock = new Clock("Logic", NOSLEEP == null);
         world = new World();
         server = new OfflineServer(this);
+        input = new Input(server);
         clock.addService(server);
+        clock.addService(input);
 
         Gdx.gl.glEnable(GL10.GL_DEPTH_TEST);
         Gdx.gl.glDepthFunc(GL10.GL_LESS);
@@ -154,7 +157,7 @@ public class App implements ApplicationListener {
         flyer.register();
         terrain.register();
 
-        Gdx.input.setInputProcessor(new Input(server));
+        Gdx.input.setInputProcessor(input);
         initialize = false;
     }
 

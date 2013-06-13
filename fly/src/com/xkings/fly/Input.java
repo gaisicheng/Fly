@@ -2,12 +2,19 @@ package com.xkings.fly;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
+import com.xkings.fly.logic.Updateable;
 import com.xkings.fly.server.ClientCommand;
 
-public class Input extends InputAdapter {
+public class Input extends InputAdapter implements Updateable {
 
     public static final int MOUSE_MOVE_X = 256;
     public static final int MOUSE_MOVE_Y = 257;
+
+    public static final int AZIMUTH = 258;
+    public static final int PITCH = 259;
+    public static final int ROLL = 260;
+
+    public static final int COEFICIENT = 1000;
 
     private final AbstractServer server;
 
@@ -17,43 +24,58 @@ public class Input extends InputAdapter {
 
     @Override
     public boolean keyDown(int keycode) {
-        return action(keycode, 1);
+        return send(keycode, 1);
     }
 
     @Override
     public boolean keyUp(int keycode) {
-        return action(keycode, 0);
+        return send(keycode, 0);
     }
 
-    private boolean action(int keycode, int dir) {
-        server.send(new ClientCommand((short) keycode, System.currentTimeMillis(), dir));
-        return false;
+    private boolean send(int action, int value) {
+        server.send(new ClientCommand((short) action, System.currentTimeMillis(), value));
+        return true;
     }
 
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
-
-    private int invertY(int y) {
+    /*private int invertY(int y) {
         return Gdx.graphics.getHeight() - y;
-    }
-
-    @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return false;
-    }
+    }*/
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
-        server.send(new ClientCommand((short) MOUSE_MOVE_X, System.currentTimeMillis(), screenX));
-        server.send(new ClientCommand((short) MOUSE_MOVE_Y, System.currentTimeMillis(), screenY));
+        send(MOUSE_MOVE_X, screenX);
+        send(MOUSE_MOVE_Y, screenY);
         return false;
+    }
+
+    @Override
+    public void update(float delta) {
+        updateOrientation();
+    }
+
+    private float oldAzimuth;
+    private float oldPitch;
+    private float oldRoll;
+
+    private void updateOrientation() {
+        float newAzimuth = Gdx.input.getAzimuth();
+        if (oldAzimuth != newAzimuth) {
+            send(AZIMUTH, (int) (newAzimuth * COEFICIENT));
+            oldAzimuth = newAzimuth;
+        }
+
+        float newPitch = Gdx.input.getPitch();
+        if (oldPitch != newPitch) {
+            send(PITCH, (int) (newPitch * COEFICIENT));
+            oldPitch = newPitch;
+        }
+
+        float newRoll = Gdx.input.getRoll();
+        if (oldRoll != newRoll) {
+            send(ROLL, (int) (newRoll * COEFICIENT));
+            oldRoll = newRoll;
+        }
+
     }
 
 }

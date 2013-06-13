@@ -27,11 +27,8 @@ public class RenderGeometrySystem extends EntityProcessingSystem {
     @Mapper
     ComponentMapper<Rotation> rotationMapper;
 
-    private final Camera light;
-
     public RenderGeometrySystem(Camera light) {
         super(Aspect.getAspectForAll(ModelComponent.class, ShaderComponent.class));
-        this.light = light;
     }
 
     @Override
@@ -40,6 +37,7 @@ public class RenderGeometrySystem extends EntityProcessingSystem {
         ShaderProgram shader = shaderMapper.get(e).getShader();
 
         Camera camera = App.getCamera();
+        Vector3 flyerPosition = App.getFlyer().getPosition().getPoint();
 
         Vector3 position = null;
         if (positionMapper.has(e)) {
@@ -58,8 +56,8 @@ public class RenderGeometrySystem extends EntityProcessingSystem {
         shader.begin();
         shader.setUniformMatrix("u_MVPMatrix", camera.combined);
         shader.setUniformMatrix("u_MVMatrix", camera.view);
-        shader.setUniformf("u_lightPos", App.getFlyer().getPosition().getPoint());
-        shader.setUniformf("u_lightPos", App.getFlyer().getPosition().getPoint());
+        shader.setUniformf("u_lightPos", flyerPosition);
+        shader.setUniformf("u_lightPos", flyerPosition);
         shader.setUniformf("sight", SIGHT);
         shader.setUniformf("backgroundColor", App.BACKGROUND);
 
@@ -69,12 +67,11 @@ public class RenderGeometrySystem extends EntityProcessingSystem {
                 material.getAttribute(i).bind(shader);
             }
 
-            Vector3 flyerPosition = App.getFlyer().getPosition().getPoint();
             Vector3 meshPosition = submesh.getBoundingBoxComponent().getCenter();
+
             if (flyerPosition.x <= meshPosition.x && flyerPosition.x - SIGHT < meshPosition.x) {
                 submesh.getMesh().render(shader, submesh.getSubMesh().primitiveType);
             }
-
         }
         shader.end();
 
