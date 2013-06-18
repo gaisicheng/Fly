@@ -40,7 +40,7 @@ public class FlyerCollisionSystem extends EntityProcessingSystem {
             }
         }
         if (condition) {
-            System.exit(1);
+            //System.exit(1);
         }
     }
 }
