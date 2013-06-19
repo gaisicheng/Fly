@@ -10,7 +10,7 @@ import com.xkings.fly.Input;
 
 public class MobileInputInterpret implements InputInterpret {
 
-    private final int RANGE = 10;
+    private final float RANGE = 30;
     private final Vector3 min = new Vector3(-RANGE, -RANGE, -RANGE);
     private final Vector3 max = new Vector3(RANGE, RANGE, RANGE);
     private final Vector3 current = new Vector3();
@@ -49,13 +49,14 @@ public class MobileInputInterpret implements InputInterpret {
     }
 
     private void calculate() {
-        current.x = MathUtils.clamp(azimuth, min.x, max.x) / RANGE;
-        current.y = MathUtils.clamp(pitch, min.y, max.y) / RANGE;
-        current.z = MathUtils.clamp(roll, min.z, max.z) / RANGE;
+        current.x = clamp(current.x, azimuth, min.x, max.x);
+        current.y = clamp(current.y, pitch, min.y, max.y);
+        current.z = clamp(current.z, roll, min.z, max.z);
 
         buffer.put(current);
+        System.out.println(current);
 
-        Vector3 average = buffer.get();
+        Vector3 average = buffer.get(0.005f);
 
         if (Gdx.graphics != null && App.getFlyer() != null) {
             App.getFlyer().getScreenCoordinates()
@@ -63,6 +64,16 @@ public class MobileInputInterpret implements InputInterpret {
             App.getFlyer().getScreenCoordinates()
                     .setY((int) ((Gdx.graphics.getHeight() * (average.z + 1)) / 2f));
         }
+    }
+
+    private float clamp(float last, float current, float min, float max) {
+
+        current = MathUtils.clamp(current, min, max) / RANGE;
+        //if (Math.abs(last - current) > 0.4f) {
+        return current;
+        //  } else {
+        //      return last;
+        //   }
     }
 
     private static class SmoothBuffer {
@@ -75,6 +86,14 @@ public class MobileInputInterpret implements InputInterpret {
             for (int i = 0; i < bufferSize; i++) {
                 buffer.add(new Vector3());
             }
+        }
+
+        public Vector3 get(float granuality) {
+            Vector3 granualVector = current.cpy();
+            granualVector.x = (int) (granualVector.x / granuality) * granuality;
+            granualVector.y = (int) (granualVector.y / granuality) * granuality;
+            granualVector.z = (int) (granualVector.z / granuality) * granuality;
+            return granualVector;
         }
 
         public void put(Vector3 vector) {
