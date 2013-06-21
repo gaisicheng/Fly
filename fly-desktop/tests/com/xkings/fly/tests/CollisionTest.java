@@ -62,7 +62,7 @@ public class CollisionTest {
 
     private StillModel loadObjModel(String name) {
         FileHandle file = new FileHandle(
-                new File("test-assets/models/" + name + ".obj").getAbsolutePath());
+                new File("fly-desktop/test-assets/models/" + name + ".obj").getAbsolutePath());
         return new ObjLoader().loadObj(file);
     }
 
