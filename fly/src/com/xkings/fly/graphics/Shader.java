@@ -62,6 +62,9 @@ public class Shader {
         } else {
             // ApplicationType.Desktop ..
             dirHandle = Gdx.files.internal("./bin/data/shaders");
+            if(!dirHandle.exists()){
+                dirHandle = Gdx.files.internal("data/shaders");
+            }
         }
 
         FileHandle[] list = dirHandle.list();
