@@ -8,23 +8,26 @@ import com.badlogic.gdx.math.Vector3;
 import com.xkings.fly.App;
 import com.xkings.fly.Input;
 
-public class MobileInputInterpret implements InputInterpret {
+public abstract class MobileInputInterpret implements InputInterpret {
 
-    private final float RANGE = 30;
-    private final Vector3 min = new Vector3(-RANGE, -RANGE, -RANGE);
-    private final Vector3 max = new Vector3(RANGE, RANGE, RANGE);
+    private final float RANGE;
+    private final Vector3 min;
+    private final Vector3 max;
     private final Vector3 current = new Vector3();
     private float azimuth;
     private float pitch;
     private float roll;
     private final SmoothBuffer buffer;
 
-    MobileInputInterpret(int bufferSize) {
+    MobileInputInterpret(int bufferSize, float range) {
+        this.RANGE = range;
+        min = new Vector3(-RANGE, -RANGE, -RANGE);
+        max = new Vector3(RANGE, RANGE, RANGE);
         buffer = new SmoothBuffer(bufferSize > 0 ? bufferSize : 1);
     }
 
-    public MobileInputInterpret() {
-        this(1);
+    public MobileInputInterpret(float range) {
+        this(1, range);
     }
 
     @Override
@@ -45,24 +48,24 @@ public class MobileInputInterpret implements InputInterpret {
             current.z = roll;
         }
 
-        calculate();
-    }
-
-    private void calculate() {
         current.x = clamp(current.x, azimuth, min.x, max.x);
         current.y = clamp(current.y, pitch, min.y, max.y);
         current.z = clamp(current.z, roll, min.z, max.z);
 
         buffer.put(current);
-        System.out.println(current);
 
-        Vector3 average = buffer.get(0.005f);
+        processMoveVector(buffer.get());
 
+    }
+
+    protected abstract void processMoveVector(Vector3 vector);
+
+    protected void calculateScreenCoordinates(float x, float y) {
         if (Gdx.graphics != null && App.getFlyer() != null) {
             App.getFlyer().getScreenCoordinates()
-                    .setX((int) ((Gdx.graphics.getWidth() * (average.y + 1)) / 2f));
+                    .setX((int) ((Gdx.graphics.getWidth() * (x + 1f)) / 2f));
             App.getFlyer().getScreenCoordinates()
-                    .setY((int) ((Gdx.graphics.getHeight() * (average.z + 1)) / 2f));
+                    .setY((int) ((Gdx.graphics.getHeight() * (y + 1f)) / 2f));
         }
     }
 

@@ -14,6 +14,9 @@ public class Input extends InputAdapter implements Updateable {
     public static final int PITCH = 259;
     public static final int ROLL = 260;
 
+    public static final int TOUCH_X = 261;
+    public static final int TOUCH_Y = 262;
+
     public static final int COEFICIENT = 1000;
 
     private final AbstractServer server;
@@ -45,6 +48,13 @@ public class Input extends InputAdapter implements Updateable {
     public boolean mouseMoved(int screenX, int screenY) {
         send(MOUSE_MOVE_X, screenX);
         send(MOUSE_MOVE_Y, screenY);
+        return false;
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        send(TOUCH_X, screenX);
+        send(TOUCH_X, screenY);
         return false;
     }
 

@@ -16,7 +16,7 @@ public class OfflineServer extends AbstractServer {
         super(app);
         this.world = app.getWorld();
         this.inputInterpret = Gdx.app.getType() == ApplicationType.Desktop ? new DesktopInputInterpret()
-                : new MobileInputInterpret();
+                : new ProgressiveInterpret();
     }
 
     public void addSystem(EntitySystem system) {
